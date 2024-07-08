@@ -1,5 +1,7 @@
 package tensor;
 
+import exceptions.InvalidShapeException;
+
 import java.util.Random;
 
 public class Tensor {
@@ -12,16 +14,16 @@ public class Tensor {
     final static Random rng = new Random();
 
     // Create empty tensor
-    public Tensor(int[] shape) {
-        this.shape = shape;
-        this.data = new float[shape[0]][shape[1]];
+    public Tensor(int rows, int columns) {
+        this.shape = new int[] {rows, columns};
+        this.data = new float[rows][columns];
         this.empty = true;
     }
 
-    public static Tensor Zeros(int[] shape) {
-        Tensor tensor = new Tensor(shape);
-        for(int i = 0; i < shape[0]; i++) {
-            for(int j = 0; j < shape[1]; j++) {
+    public static Tensor Zeros(int rows, int columns) {
+        Tensor tensor = new Tensor(rows, columns);
+        for(int i = 0; i < rows; i++) {
+            for(int j = 0; j < columns; j++) {
                 tensor.Set(i, j, 0.0f);
             }
         }
@@ -29,10 +31,10 @@ public class Tensor {
         return tensor;
     }
 
-    public static Tensor Ones(int[] shape) {
-        Tensor tensor = new Tensor(shape);
-        for(int i = 0; i < shape[0]; i++) {
-            for(int j = 0; j < shape[1]; j++) {
+    public static Tensor Ones(int rows, int columns) {
+        Tensor tensor = new Tensor(rows, columns);
+        for(int i = 0; i < rows; i++) {
+            for(int j = 0; j < columns; j++) {
                 tensor.Set(i, j, 1.0f);
             }
         }
@@ -40,10 +42,10 @@ public class Tensor {
         return tensor;
     }
 
-    public static Tensor Diag(int[] shape) {
-        Tensor tensor = new Tensor(shape);
-        for(int i = 0; i < shape[0]; i++) {
-            for(int j = 0; j < shape[1]; j++) {
+    public static Tensor Identity(int size) {
+        Tensor tensor = new Tensor(size, size);
+        for(int i = 0; i < size; i++) {
+            for(int j = 0; j < size; j++) {
                 tensor.Set(i, j, 0.0f);
             }
             tensor.Set(i,i, 1.0f);
@@ -67,7 +69,7 @@ public class Tensor {
 
     public Tensor T() {
         // Reshape the array
-        Tensor out = new Tensor(new int[] {this.Shape()[1], this.Shape()[0]});
+        Tensor out = new Tensor(this.Shape()[1], this.Shape()[0]);
         for(int i = 0; i < this.Shape()[0]; i++) {
             for(int j = 0; j < this.Shape()[1]; j++) {
                 out.Set(j, i, this.Get(i, j));
@@ -77,10 +79,10 @@ public class Tensor {
         return out;
     }
 
-    public static Tensor Random(int[] shape) {
-        Tensor tensor = new Tensor(shape);
-        for(int i = 0; i < shape[0]; i++) {
-            for(int j = 0; j < shape[1]; j++) {
+    public static Tensor Random(int rows, int columns) {
+        Tensor tensor = new Tensor(rows, columns);
+        for(int i = 0; i < rows; i++) {
+            for(int j = 0; j < columns; j++) {
                 tensor.Set(i, j, rng.nextFloat());
             }
         }
@@ -111,10 +113,14 @@ public class Tensor {
         return this.empty;
     }
 
+    public boolean isSquare() {
+        return this.Shape()[0] == this.Shape()[1];
+    }
+
     // Operations
     public Tensor Add(Tensor other) {
         // TODO: check shapes
-        Tensor tensor = new Tensor(this.Shape());
+        Tensor tensor = new Tensor(other.Shape()[0], other.Shape()[1]);
         for(int i = 0; i < this.Shape()[0]; i++) {
             for(int j = 0; j < this.Shape()[1]; j++) {
                 tensor.Set(i, j, this.Get(i, j) + other.Get(i, j));
@@ -135,7 +141,7 @@ public class Tensor {
 
     public Tensor Sub(Tensor other) {
         // TODO: check shapes
-        Tensor tensor = new Tensor(this.Shape());
+        Tensor tensor = new Tensor(other.Shape()[0], other.Shape()[1]);
         for(int i = 0; i < this.Shape()[0]; i++) {
             for(int j = 0; j < this.Shape()[1]; j++) {
                 tensor.Set(i, j, this.Get(i, j) - other.Get(i, j));
@@ -156,7 +162,7 @@ public class Tensor {
 
     public Tensor Mul(Tensor other) {
         // TODO: check shapes
-        Tensor tensor = new Tensor(new int[] {this.Shape()[0], other.Shape()[1]});
+        Tensor tensor = new Tensor(this.Shape()[0], other.Shape()[1]);
 
         float total = 0.0f;
         for(int i = 0; i < this.Shape()[0]; i++) {
@@ -170,5 +176,69 @@ public class Tensor {
         }
 
         return tensor;
+    }
+
+    public Tensor LinMul(Tensor other) {
+        // TODO: Check shapes
+        // Perform linear multiplication: e.g: a[i,j]*b[i,j]
+        Tensor tensor = new Tensor(this.Shape()[0], other.Shape()[1]);
+
+        for(int i = 0; i < this.Shape()[0]; i++) {
+            for(int j = 0; j < this.Shape()[1]; j++) {
+                tensor.Set(i, j, this.Get(i, j) * other.Get(i, j));
+            }
+        }
+
+        return tensor;
+    }
+
+    public Tensor ScalarMul(float k) {
+        // Multiply each element in the tensor by scalar k
+        Tensor tensor = new Tensor(this.Shape()[0], this.Shape()[1]);
+
+        for(int i = 0; i < this.Shape()[0]; i++) {
+            for(int j = 0; j < this.Shape()[1]; j++) {
+                tensor.Set(i, j, this.Get(i, j) * k);
+            }
+        }
+
+        return tensor;
+    }
+
+    public float Det() throws Exception {
+        // Returns determinant of tensor (only if square)
+        if(!this.isSquare()) {
+            throw new InvalidShapeException("Tensor must be square");
+        }
+
+        if(this.Shape()[0] == 1) {
+            // Single element tensor
+            return this.Get(0,0);
+        } else if(this.Shape()[1] == 2) {
+            // 2x2 matrix, use the 2x2 matrix determinant formula
+            return this.Get(0,0)*this.Get(1,1) - this.Get(1,0) * this.Get(0,1);
+        } else {
+            float sums = 0.0f;
+            float retInDet = 1.0f;
+            int size = this.Shape()[0];
+
+            for(int colDet = 0; colDet < size; colDet++) {
+                Tensor inner = Tensor.Zeros(size-1, size-1);
+                for(int row = 1, rowInner = 0; row < size; row++) {
+                    for(int col = 0, colInner = 0; col < size; col++) {
+                        if(col == colDet) {
+                            continue;
+                        }
+
+                        inner.Set(rowInner, colInner, this.Get(row, col));
+                        colInner++;
+                    }
+                    rowInner++;
+                }
+                sums += retInDet * this.Get(0, colDet) * inner.Det();
+                retInDet *= -1;
+            }
+            return sums;
+        }
     }
 }
