@@ -4,7 +4,7 @@ import tensor.Tensor;
 
 public class Loss implements ILoss {
     @Override
-    public float forward(Tensor yTrue, Tensor yPred) {
+    public float forward(Tensor yTrue, Tensor yPred) throws Exception {
         return 0;
     }
 

@@ -55,6 +55,20 @@ public class Tensor {
         this.dependencies = new TensorOperation(Operator.NONE, null,null);
     }
 
+    public Tensor(int[] shape) {
+        this.shape = new int[] {shape[0], shape[1]};
+        this.data = new float[shape[0]][shape[1]];
+        this.empty = true;
+
+        // Initialize gradients
+        this.gradient = new Tensor(shape[0], shape[1], false);
+        this.gradient.zero_();
+
+        //this.gradient = initializeGradients(rows, columns);
+        this.requiresGrad = true;
+        this.dependencies = new TensorOperation(Operator.NONE, null,null);
+    }
+
     public Tensor(float[][] data) {
         // Create from a 2D array
         this.data = data;
@@ -112,8 +126,20 @@ public class Tensor {
         return this.shape;
     }
 
+    public int size() {
+        return this.shape[0] * this.shape[1];
+    }
+
     public float get(int row, int column) {
         return this.data[row][column];
+    }
+
+    public float get(int index) {
+        if(this.shape()[0] > this.shape()[1]) {
+            return this.data[index][0];
+        } else {
+            return this.data[0][index];
+        }
     }
 
     public Tensor T() {
@@ -263,6 +289,30 @@ public class Tensor {
         return tensor;
     }
 
+    public Tensor pow(float power) {
+        Tensor tensor = new Tensor(this.shape());
+        for(int i = 0; i < this.shape()[0]; i++) {
+            for(int j = 0; j < this.shape()[1]; j++) {
+                tensor.set(i, j, (float) Math.pow(this.get(i, j), power));
+            }
+        }
+
+        tensor.dependencies = new TensorOperation(Operator.POW, this, null);
+
+        return tensor;
+    }
+
+    public float sum() {
+        float output = 0.0f;
+        for(int i = 0; i < this.shape()[0]; i++) {
+            for(int j = 0; j < this.shape()[1]; j++) {
+                output += this.get(i, j);
+            }
+        }
+
+        return output;
+    }
+
     public float det() throws Exception {
         // Returns determinant of tensor (only if square)
         if(!this.isSquare()) {
@@ -387,10 +437,8 @@ public class Tensor {
                     }
                 }
                 break;
-
         }
     }
-
 
     public void update(float learningRate) {
         // Update tensor gradients
