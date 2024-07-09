@@ -9,6 +9,7 @@ public interface IOptimizer {
     public List<Tensor> getParameters();
     public List<Tensor> parameters();
     public void print();
+    public void zeroGrad();
 
 
 }

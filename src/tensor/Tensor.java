@@ -9,7 +9,7 @@ import java.util.Random;
 public class Tensor {
     private int[] shape;
     private float[][] data;
-    public float[][] gradient;
+    public Tensor gradient;
     private boolean empty;
     public boolean requiresGrad;
 
@@ -17,16 +17,27 @@ public class Tensor {
 
     final static Random rng = new Random();
 
-    private static float[][] initializeGradients(int rows, int columns) {
-        float[][] grad = new float[rows][columns];
-        for(int i = 0; i < rows; i++) {
-            for(int j = 0; j < columns; j++) {
-                //grad[i][j] = 0.0f;
-                grad[i][j] = rng.nextFloat();
-            }
+//    private static float[][] initializeGradients(int rows, int columns) {
+//        float[][] grad = new float[rows][columns];
+//        for(int i = 0; i < rows; i++) {
+//            for(int j = 0; j < columns; j++) {
+//                //grad[i][j] = 0.0f;
+//                grad[i][j] = rng.nextFloat();
+//            }
+//        }
+//
+//        return grad;
+//    }
+
+    public Tensor(int rows, int columns, boolean requiresGrad) {
+        this.shape = new int[] {rows, columns};
+        this.data = new float[rows][columns];
+        this.requiresGrad = requiresGrad;
+        if(requiresGrad) {
+            this.gradient = new Tensor(rows, columns, false);
         }
 
-        return grad;
+        this.dependencies = new TensorOperation(Operator.NONE, null, null);
     }
 
     // Create empty tensor
@@ -34,9 +45,23 @@ public class Tensor {
         this.shape = new int[] {rows, columns};
         this.data = new float[rows][columns];
         this.empty = true;
-        this.gradient = initializeGradients(rows, columns);
+
+        // Initialize gradients
+        this.gradient = new Tensor(rows, columns, false);
+        this.gradient.zero_();
+
+        //this.gradient = initializeGradients(rows, columns);
         this.requiresGrad = true;
         this.dependencies = new TensorOperation(Operator.NONE, null,null);
+    }
+
+    public Tensor(float[][] data) {
+        // Create from a 2D array
+        this.data = data;
+        this.shape = new int[] {data.length, data[0].length};
+        this.requiresGrad = true;
+        this.gradient = new Tensor(this.shape[0], this.shape[1], false);
+        this.dependencies = new TensorOperation(Operator.NONE, null, null);
     }
 
     public static Tensor zeros(int rows, int columns) {
@@ -136,6 +161,15 @@ public class Tensor {
         return this.shape()[0] == this.shape()[1];
     }
 
+    public void zero_() {
+        // Fill tensor with zeros
+        for(int i = 0; i < this.shape()[0]; i++) {
+            for(int j = 0; j < this.shape()[1]; j++) {
+                this.set(i, j, 0.0f);
+            }
+        }
+    }
+
     // Operations
     public Tensor add(Tensor other) throws Exception {
         // Check shapes
@@ -179,26 +213,37 @@ public class Tensor {
             return;
         }
 
+        Tensor a = this.dependencies.actors[0];
+        Tensor b = this.dependencies.actors[1];
         switch(this.dependencies.operation) {
             case ADD:
-                for(Tensor actor: this.dependencies.actors) {
-                    for(int i = 0; i < actor.shape()[0]; i++) {
-                        for(int j = 0; j < actor.shape()[1]; j++) {
-                            actor.gradient[i][j] += this.gradient[i][j];
-                        }
+            case MUL:
+                for(int i = 0; i < a.shape()[0]; i++) {
+                    for(int j = 0; j < a.shape()[1]; j++) {
+                        a.gradient.set(i,j, a.gradient.get(i,j) + b.get(i,j));
+                        b.gradient.set(i,j, b.gradient.get(i,j) + a.get(i,j));
                     }
                 }
                 break;
 
             case SUB:
-                for(Tensor actor: this.dependencies.actors) {
-                    for(int i = 0; i < actor.shape()[0]; i++) {
-                        for(int j = 0; j < actor.shape()[1]; j++) {
-                            actor.gradient[i][j] -= this.gradient[i][j];
-                        }
+                for(int i = 0; i < a.shape()[0]; i++) {
+                    for(int j = 0; j < a.shape()[1]; j++) {
+                        a.gradient.set(i,j, a.gradient.get(i,j) + b.get(i,j));
+                        b.gradient.set(i,j, b.gradient.get(i,j) - a.get(i,j));
                     }
                 }
                 break;
+
+            case DIV:
+                for(int i = 0; i < a.shape()[0]; i++) {
+                    for(int j = 0; j < a.shape()[1]; j++) {
+                        a.gradient.set(i,j, (float) (a.gradient.get(i,j) + 1.0/b.get(i,j)));
+                        b.gradient.set(i,j, (float) (b.gradient.get(i,j) - a.get(i,j)/Math.pow(b.get(i,j), 2.0)));
+                    }
+                }
+                break;
+
         }
     }
 
@@ -323,7 +368,7 @@ public class Tensor {
         // Updates its value given a learningRate
         for(int i = 0; i < this.shape()[0]; i++) {
             for(int j = 0; j < this.shape()[1]; j++) {
-                this.set(i, j, this.get(i, j) + learningRate*this.gradient[i][j]);
+                this.set(i, j, this.get(i, j) + learningRate*this.gradient.get(i, j));
             }
         }
     }

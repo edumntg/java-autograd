@@ -36,4 +36,12 @@ public class Optimizer implements IOptimizer {
             p.print();
         }
     }
+
+    @Override
+    public void zeroGrad() {
+        // Reset all gradients
+        for(Tensor parameter: parameters) {
+            parameter.gradient.zero_();
+        }
+    }
 }

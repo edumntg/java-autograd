@@ -9,29 +9,12 @@ import java.util.List;
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) throws Exception {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-
-
-        // Test optimizer
-        List<Tensor> parameters = new ArrayList<Tensor>();
-        for(int i = 0; i < 5; i++) {
-            parameters.add(Tensor.random(3,3));
-        }
-
-        // Perform some basic operations so the gradients are not zero
-        for(int i = 0; i < 5; i++) {
-            for(int j = 0; j < 5; j++) {
-                parameters.get(i).add(parameters.get(j));
-            }
-        }
-
-        Optimizer sgd = new SGD(parameters, 0.1f);
-        sgd.print();
-        System.out.println("\n");
-        // Update parameters
-        sgd.step();
-        sgd.print();
-
+        Tensor a = new Tensor(new float[][] {{2}});
+        Tensor b = new Tensor(new float[][] {{3}});
+        Tensor result = a.add(b);
+        result.backward();
+        a.gradient.print();
+        b.gradient.print();
+;
     }
 }
