@@ -61,6 +61,7 @@ public class Tensor {
         this.shape = new int[] {data.length, data[0].length};
         this.requiresGrad = true;
         this.gradient = new Tensor(this.shape[0], this.shape[1], false);
+        this.gradient.zero_();
         this.dependencies = new TensorOperation(Operator.NONE, null, null);
     }
 
@@ -271,6 +272,8 @@ public class Tensor {
 //            }
 //        };
 
+        tensor.dependencies = new TensorOperation(Operator.SUB, this, other);
+
         return tensor;
     }
 
@@ -291,6 +294,8 @@ public class Tensor {
                 total = 0.0f;
             }
         }
+
+        tensor.dependencies = new TensorOperation(Operator.MUL, this, other);
 
         return tensor;
     }

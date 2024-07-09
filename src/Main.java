@@ -11,7 +11,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
         Tensor a = new Tensor(new float[][] {{2}});
         Tensor b = new Tensor(new float[][] {{3}});
-        Tensor result = a.add(b);
+        Tensor result = a.mul(b);
         result.backward();
         a.gradient.print();
         b.gradient.print();
