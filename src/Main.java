@@ -1,10 +1,4 @@
-import optimizer.Optimizer;
-import optimizer.SGD;
 import tensor.Tensor;
-
-import java.util.ArrayList;
-import java.util.List;
-
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
@@ -15,6 +9,9 @@ public class Main {
         result.backward();
         a.gradient.print();
         b.gradient.print();
-;
+
+        result = a.sigmoid();
+        result.backward();
+        a.gradient.print();
     }
 }

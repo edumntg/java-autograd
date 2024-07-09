@@ -65,6 +65,10 @@ public class Tensor {
         this.dependencies = new TensorOperation(Operator.NONE, null, null);
     }
 
+    public float[][] getData() {
+        return this.data;
+    }
+
     public static Tensor zeros(int rows, int columns) {
         Tensor tensor = new Tensor(rows, columns);
         for(int i = 0; i < rows; i++) {
@@ -184,68 +188,9 @@ public class Tensor {
             }
         }
 
-//        tensor.gradFunction = () -> {
-//            if(!this.requiresGrad) {
-//                return;
-//            }
-//            System.out.println("add grad func");
-//            for(int i = 0; i < this.shape()[0]; i++) {
-//                for(int j = 0; j < this.shape()[1]; j++) {
-//                    this.gradient[i][j] += tensor.get(i,j);
-//                    other.gradient[i][j] += tensor.get(i,j);
-//                }
-//            }
-//        };
-
         tensor.dependencies = new TensorOperation(Operator.ADD, this, other);
-        //this.dependencies = new TensorOperation(Operator.ADD, this, other);
-        //other.dependencies = new TensorOperation(Operator.ADD, this, other);
-
 
         return tensor;
-    }
-
-    public void backward() {
-        if(!this.requiresGrad) {
-            return;
-        }
-
-        if(this.dependencies.operation == Operator.NONE) {
-            return;
-        }
-
-        Tensor a = this.dependencies.actors[0];
-        Tensor b = this.dependencies.actors[1];
-        switch(this.dependencies.operation) {
-            case ADD:
-            case MUL:
-                for(int i = 0; i < a.shape()[0]; i++) {
-                    for(int j = 0; j < a.shape()[1]; j++) {
-                        a.gradient.set(i,j, a.gradient.get(i,j) + b.get(i,j));
-                        b.gradient.set(i,j, b.gradient.get(i,j) + a.get(i,j));
-                    }
-                }
-                break;
-
-            case SUB:
-                for(int i = 0; i < a.shape()[0]; i++) {
-                    for(int j = 0; j < a.shape()[1]; j++) {
-                        a.gradient.set(i,j, a.gradient.get(i,j) + b.get(i,j));
-                        b.gradient.set(i,j, b.gradient.get(i,j) - a.get(i,j));
-                    }
-                }
-                break;
-
-            case DIV:
-                for(int i = 0; i < a.shape()[0]; i++) {
-                    for(int j = 0; j < a.shape()[1]; j++) {
-                        a.gradient.set(i,j, (float) (a.gradient.get(i,j) + 1.0/b.get(i,j)));
-                        b.gradient.set(i,j, (float) (b.gradient.get(i,j) - a.get(i,j)/Math.pow(b.get(i,j), 2.0)));
-                    }
-                }
-                break;
-
-        }
     }
 
     public Tensor sub(Tensor other) throws Exception {
@@ -259,18 +204,6 @@ public class Tensor {
                 tensor.set(i, j, this.get(i, j) - other.get(i, j));
             }
         }
-
-//        tensor.gradFunction = () -> {
-//            if(!this.requiresGrad) {
-//                return;
-//            }
-//            for(int i = 0; i < this.shape()[0]; i++) {
-//                for(int j = 0; j < this.shape()[1]; j++) {
-//                    this.gradient[i][j] -= tensor.get(i,j);
-//                    other.gradient[i][j] -= tensor.get(i,j);
-//                }
-//            }
-//        };
 
         tensor.dependencies = new TensorOperation(Operator.SUB, this, other);
 
@@ -367,6 +300,98 @@ public class Tensor {
         }
     }
 
+    public Tensor relu() {
+        Tensor result = new Tensor(this.getData());
+        for(int i = 0; i < result.shape()[0]; i++) {
+            for(int j = 0; j < result.shape()[1]; j++) {
+                result.set(i, j, Math.max(result.get(i,j), 0));
+            }
+        }
+
+        result.dependencies = new TensorOperation(Operator.RELU, this, null);
+
+        return result;
+    }
+
+    public Tensor sigmoid() {
+        Tensor result = new Tensor(this.getData());
+        for(int i = 0; i < result.shape()[0]; i++) {
+            for(int j = 0; j < result.shape()[1]; j++) {
+                result.set(i, j, (float) (1.0/(1.0 + Math.exp(-result.get(i,j)))));
+            }
+        }
+
+        result.dependencies = new TensorOperation(Operator.SIGMOID, this, null);
+
+        return result;
+    }
+
+    public void backward() {
+        if(!this.requiresGrad) {
+            return;
+        }
+
+        if(this.dependencies.operation == Operator.NONE) {
+            return;
+        }
+
+        Tensor a = this.dependencies.actors[0];
+        Tensor b = this.dependencies.actors[1];
+        float value; // helper
+        switch(this.dependencies.operation) {
+            case ADD:
+            case MUL:
+                for(int i = 0; i < a.shape()[0]; i++) {
+                    for(int j = 0; j < a.shape()[1]; j++) {
+                        a.gradient.set(i,j, a.gradient.get(i,j) + b.get(i,j));
+                        b.gradient.set(i,j, b.gradient.get(i,j) + a.get(i,j));
+                    }
+                }
+                break;
+
+            case SUB:
+                for(int i = 0; i < a.shape()[0]; i++) {
+                    for(int j = 0; j < a.shape()[1]; j++) {
+                        a.gradient.set(i,j, a.gradient.get(i,j) + b.get(i,j));
+                        b.gradient.set(i,j, b.gradient.get(i,j) - a.get(i,j));
+                    }
+                }
+                break;
+
+            case DIV:
+                for(int i = 0; i < a.shape()[0]; i++) {
+                    for(int j = 0; j < a.shape()[1]; j++) {
+                        a.gradient.set(i,j, (float) (a.gradient.get(i,j) + 1.0/b.get(i,j)));
+                        b.gradient.set(i,j, (float) (b.gradient.get(i,j) - a.get(i,j)/Math.pow(b.get(i,j), 2.0)));
+                    }
+                }
+                break;
+
+            case RELU:
+                for(int i = 0; i < a.shape()[0]; i++) {
+                    for(int j = 0; j < a.shape()[1]; j++) {
+                        value = 1.0f;
+                        if(a.get(i,j) <= 0) {
+                            value = 0.0f;
+                        }
+                        a.gradient.set(i, j, value);
+                    }
+                }
+                break;
+
+            case SIGMOID:
+                for(int i = 0; i < a.shape()[0]; i++) {
+                    for(int j = 0; j < a.shape()[1]; j++) {
+                        value = (float) (1.0f / (1.0f + Math.exp(-a.get(i,j))));
+                        a.gradient.set(i, j, value * (1.0f - value));
+                    }
+                }
+                break;
+
+        }
+    }
+
+
     public void update(float learningRate) {
         // Update tensor gradients
         this.backward();
@@ -377,5 +402,4 @@ public class Tensor {
             }
         }
     }
-
 }

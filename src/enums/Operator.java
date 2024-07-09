@@ -6,5 +6,7 @@ public enum Operator {
     SUB,
     MUL,
     POW,
-    DIV
+    DIV,
+    RELU,
+    SIGMOID
 }
