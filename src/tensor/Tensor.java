@@ -4,7 +4,7 @@ import enums.Operator;
 import exceptions.InvalidShapeException;
 import utils.Utils;
 
-import java.util.Random;
+import java.util.*;
 
 public class Tensor {
     private int[] shape;
@@ -12,6 +12,9 @@ public class Tensor {
     public Tensor gradient;
     private boolean empty;
     public boolean requiresGrad;
+    public BackwardMethod _backward;
+    public Set<Tensor> childrens;
+    public Operator op_;
 
     public TensorOperation dependencies;
 
@@ -38,6 +41,8 @@ public class Tensor {
         }
 
         this.dependencies = new TensorOperation(Operator.NONE, null, null);
+        this.childrens = new HashSet<Tensor>();
+        this._backward = () -> {return;};
     }
 
     // Create empty tensor
@@ -53,6 +58,8 @@ public class Tensor {
         //this.gradient = initializeGradients(rows, columns);
         this.requiresGrad = true;
         this.dependencies = new TensorOperation(Operator.NONE, null,null);
+        this.childrens = new HashSet<Tensor>();
+        this._backward = () -> {return;};
     }
 
     public Tensor(int[] shape) {
@@ -67,6 +74,8 @@ public class Tensor {
         //this.gradient = initializeGradients(rows, columns);
         this.requiresGrad = true;
         this.dependencies = new TensorOperation(Operator.NONE, null,null);
+        this.childrens = new HashSet<Tensor>();
+        this._backward = () -> {return;};
     }
 
     public Tensor(float[][] data) {
@@ -77,6 +86,22 @@ public class Tensor {
         this.gradient = new Tensor(this.shape[0], this.shape[1], false);
         this.gradient.zero_();
         this.dependencies = new TensorOperation(Operator.NONE, null, null);
+        this.childrens = new HashSet<Tensor>();
+        this._backward = () -> {return;};
+    }
+
+    public Tensor(Tensor data, TensorOperation dependencies) {
+        this.data = data.getData();
+        this.shape = data.shape();
+        this.requiresGrad = true;
+        this.gradient = new Tensor(this.shape[0], this.shape[1], false);
+        this.gradient.zero_();
+        this.dependencies = dependencies;
+        this._backward = () -> {return;};
+    }
+
+    public Set<Tensor> getChildrens() {
+        return this.childrens;
     }
 
     public float[][] getData() {
@@ -205,39 +230,46 @@ public class Tensor {
         }
     }
 
+    public void one_() {
+        // Fill tensor with zeros
+        for(int i = 0; i < this.shape()[0]; i++) {
+            for(int j = 0; j < this.shape()[1]; j++) {
+                this.set(i, j, 1.0f);
+            }
+        }
+    }
+
     // Operations
     public Tensor add(Tensor other) throws Exception {
         // Check shapes
         if(!Utils.ShapesEquals(this.shape(), other.shape())) {
             throw new InvalidShapeException("Tensors A and B must have equal shapes");
         }
-        Tensor tensor = new Tensor(other.shape()[0], other.shape()[1]);
+        Tensor out = new Tensor(other.shape()[0], other.shape()[1]);
         for(int i = 0; i < this.shape()[0]; i++) {
             for(int j = 0; j < this.shape()[1]; j++) {
-                tensor.set(i, j, this.get(i, j) + other.get(i, j));
+                out.set(i, j, this.get(i, j) + other.get(i, j));
             }
         }
 
-        tensor.dependencies = new TensorOperation(Operator.ADD, this, other);
+        out._backward = () -> {
+            for(int i = 0; i < this.shape()[0]; i++) {
+                for(int j = 0; j < this.shape()[1]; j++) {
+                    this.gradient.set(i, j, this.gradient.get(i, j) + out.gradient.get(i, j));
+                    other.gradient.set(i, j, other.gradient.get(i, j) + out.gradient.get(i, j));
+                }
+            }
+        };
 
-        return tensor;
+//        out.childrens.add(this);
+//        out.childrens.add(other);
+//        out.dependencies = new TensorOperation(Operator.ADD, this, other);
+        out.dependencies = new TensorOperation(Operator.ADD, this, other);
+        return out;
     }
 
     public Tensor sub(Tensor other) throws Exception {
-        // Check shapes
-        if(!Utils.ShapesEquals(this.shape(), other.shape())) {
-            throw new InvalidShapeException("Tensors A and B must have equal shapes");
-        }
-        Tensor tensor = new Tensor(other.shape()[0], other.shape()[1]);
-        for(int i = 0; i < this.shape()[0]; i++) {
-            for(int j = 0; j < this.shape()[1]; j++) {
-                tensor.set(i, j, this.get(i, j) - other.get(i, j));
-            }
-        }
-
-        tensor.dependencies = new TensorOperation(Operator.SUB, this, other);
-
-        return tensor;
+        return this.add(other.scalarMul(-1.0f)); // a + (-1)*b
     }
 
     public Tensor mul(Tensor other) throws Exception {
@@ -245,19 +277,31 @@ public class Tensor {
         if(!Utils.ShapesMultiplicative(this.shape(), other.shape())) {
             throw new InvalidShapeException("Number of columns in Tensor A must be equal to number of rows in Tensor B");
         }
-        Tensor result = Tensor.zeros(this.shape()[0], other.shape()[1]);
+        Tensor out = Tensor.zeros(this.shape()[0], other.shape()[1]);
 
         for(int i = 0; i < this.shape()[0]; i++) {
             for(int j = 0; j < other.shape()[1]; j++) {
                 for(int k = 0; k < other.shape()[0]; k++) {
-                    result.set(i, j, result.get(i, j) + this.get(i,k)*other.get(k,j));
+                    out.set(i, j, out.get(i, j) + this.get(i,k)*other.get(k,j));
                 }
             }
         }
 
-        result.dependencies = new TensorOperation(Operator.MUL, this, other);
+        out._backward = () -> {
+            for(int i = 0; i < this.shape()[0]; i++) {
+                for(int j = 0; j < this.shape()[1]; j++) {
+                    this.gradient.set(i, j, this.gradient.get(i, j) + other.get(i, j) * out.gradient.get(i, j));
+                    other.gradient.set(i, j, other.gradient.get(i, j) + this.get(i, j) * out.gradient.get(i, j));
+                }
+            }
+        };
 
-        return result;
+        out.childrens.add(this);
+        out.childrens.add(other);
+
+        out.dependencies = new TensorOperation(Operator.MUL, this, other);
+
+        return out;
     }
 
     public Tensor linMul(Tensor other) throws Exception {
@@ -389,6 +433,31 @@ public class Tensor {
         return result;
     }
 
+    public void topoBackward() throws Exception {
+        List<Tensor> topo = new ArrayList<Tensor>();
+        Set<Tensor> visited = new HashSet<Tensor>();
+
+        buildTopo(this, topo, visited);
+
+        this.gradient.one_();
+
+        // Reverse list
+        Collections.reverse(topo);
+        for(Tensor v: topo) {
+            v._backward.run();
+        }
+    }
+
+    private void buildTopo(Tensor v, List<Tensor> topo, Set<Tensor> visited) throws Exception {
+        if(!visited.contains(v)) {
+            visited.add(v);
+            for(Tensor child: v.dependencies.childrens) {
+                buildTopo(child, topo, visited);
+            }
+            topo.add(v);
+        }
+    }
+
     public void backward() {
         if(!this.requiresGrad) {
             return;
@@ -398,8 +467,8 @@ public class Tensor {
             return;
         }
 
-        Tensor a = this.dependencies.actors[0];
-        Tensor b = this.dependencies.actors[1];
+        Tensor a = this.dependencies.childrens.get(0);
+        Tensor b = this.dependencies.childrens.get(1);
         float value; // helper
         switch(this.dependencies.operation) {
             case ADD:
