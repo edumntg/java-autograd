@@ -83,6 +83,10 @@ public class Tensor {
         return this.data;
     }
 
+    public float item() {
+        return this.getData()[0][0];
+    }
+
     public static Tensor zeros(int rows, int columns) {
         Tensor tensor = new Tensor(rows, columns);
         for(int i = 0; i < rows; i++) {
@@ -241,22 +245,19 @@ public class Tensor {
         if(!Utils.ShapesMultiplicative(this.shape(), other.shape())) {
             throw new InvalidShapeException("Number of columns in Tensor A must be equal to number of rows in Tensor B");
         }
-        Tensor tensor = new Tensor(this.shape()[0], other.shape()[1]);
+        Tensor result = Tensor.zeros(this.shape()[0], other.shape()[1]);
 
-        float total = 0.0f;
         for(int i = 0; i < this.shape()[0]; i++) {
-            for(int j = 0; j < this.shape()[1]; j++) {
-                for(int k = 0; k < this.shape()[1]; k++) {
-                    total += this.get(i, k) + other.get(k, j);
+            for(int j = 0; j < other.shape()[1]; j++) {
+                for(int k = 0; k < other.shape()[0]; k++) {
+                    result.set(i, j, result.get(i, j) + this.get(i,k)*other.get(k,j));
                 }
-                tensor.set(i, j, total);
-                total = 0.0f;
             }
         }
 
-        tensor.dependencies = new TensorOperation(Operator.MUL, this, other);
+        result.dependencies = new TensorOperation(Operator.MUL, this, other);
 
-        return tensor;
+        return result;
     }
 
     public Tensor linMul(Tensor other) throws Exception {
@@ -289,6 +290,18 @@ public class Tensor {
         return tensor;
     }
 
+    public Tensor scalarDivision(float k) {
+        // TODO: assert that k != 0
+        Tensor output = new Tensor(this.shape());
+        for(int i = 0; i < this.shape()[0]; i++) {
+            for(int j = 0; j < this.shape()[1]; j++) {
+                output.set(i, j, this.get(i, j) / k);
+            }
+        }
+
+        return output;
+    }
+
     public Tensor pow(float power) {
         Tensor tensor = new Tensor(this.shape());
         for(int i = 0; i < this.shape()[0]; i++) {
@@ -302,7 +315,7 @@ public class Tensor {
         return tensor;
     }
 
-    public float sum() {
+    public Tensor sum() {
         float output = 0.0f;
         for(int i = 0; i < this.shape()[0]; i++) {
             for(int j = 0; j < this.shape()[1]; j++) {
@@ -310,7 +323,7 @@ public class Tensor {
             }
         }
 
-        return output;
+        return new Tensor(new float[][] {{output}});
     }
 
     public float det() throws Exception {
