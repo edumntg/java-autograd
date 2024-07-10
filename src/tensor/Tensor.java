@@ -463,4 +463,22 @@ public class Tensor {
             }
         }
     }
+
+    public boolean equals(Tensor other) {
+        // Check shapes
+        if(this.shape()[0] != other.shape()[0] || this.shape()[1] != other.shape()[1]) {
+            return false;
+        }
+
+        // Check values
+        for(int i = 0; i < this.shape()[0]; i++) {
+            for(int j = 0; j < this.shape()[1]; j++) {
+                if(this.get(i,j) != other.get(i,j) || this.gradient.get(i,j) != other.gradient.get(i,j)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
 }

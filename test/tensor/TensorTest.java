@@ -23,6 +23,12 @@ public class TensorTest {
 
     @Test
     public void t() {
+
+        Tensor tensor = new Tensor(new float[][] {{1,2,3},{4,5,6}});
+        Tensor expected = new Tensor(new float[][] {{1,4}, {2,5}, {3,6}});
+
+        assertTrue(tensor.T().equals(expected));
+
     }
 
     @Test
@@ -47,10 +53,18 @@ public class TensorTest {
     }
 
     @Test
-    public void pow() {
+    public void pow() throws Exception {
+        Tensor a = new Tensor(new float[][] {{1,2,3}, {4,5,6}});
+        Tensor expected = new Tensor(new float[][] {{1, 4, 9}, {16, 25, 36}});
+
+        assertEquals(a.pow(2.0f).sub(expected).sum().item(), 0.0, 0.0);
     }
 
     @Test
     public void sum() {
+        Tensor a = new Tensor(new float[][] {{1,2,3}, {4,5,6}});
+        float expected = 21.0f;
+
+        assertEquals(a.sum().item(), expected, 0.0);
     }
 }

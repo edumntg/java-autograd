@@ -5,15 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ca9ad6c3-000b-4a55-8119-e272009079b0" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/test/tensor/TensorTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/java-nn.iml" beforeDir="false" afterPath="$PROJECT_DIR$/java-nn.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/loss/ILoss.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/loss/ILoss.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/loss/Loss.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/loss/Loss.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/loss/MSE.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/loss/MSELoss.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/optimizer/Optimizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/optimizer/Optimizer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/tensor/Tensor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tensor/Tensor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/tensor/TensorTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/test/tensor/TensorTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -122,7 +116,7 @@
       <updated>1720412645437</updated>
       <workItem from="1720412646563" duration="1357000" />
       <workItem from="1720449274125" duration="12583000" />
-      <workItem from="1720530747960" duration="7886000" />
+      <workItem from="1720530747960" duration="9696000" />
     </task>
     <servers />
   </component>
