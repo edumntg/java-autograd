@@ -2,7 +2,7 @@ package loss;
 
 import tensor.Tensor;
 
-public class MSE extends Loss {
+public class MSELoss extends Loss {
 
     @Override
     public Tensor forward(Tensor yTrue, Tensor yPred) throws Exception {
@@ -10,6 +10,6 @@ public class MSE extends Loss {
 
         Tensor output = (yTrue.sub(yPred)).pow(2.0f);
 
-        return output.sum().scalarDivision((float)(1/N));
+        return output.sum().scalarDivision((float)N);
     }
 }

@@ -9,6 +9,9 @@ public class Optimizer implements IOptimizer {
     private float learningRate;
 
     public Optimizer(List<Tensor> parameters, float learningRate) {
+        if(learningRate <= 0.0f) {
+            learningRate = 1E-4f;
+        }
         this.parameters = parameters;
         this.learningRate = learningRate;
     }
