@@ -71,8 +71,7 @@ public class Value {
     }
 
     public Value neg() {
-        Value other = new Value(-1.0f, new HashSet<Value>(), Operator.NONE);
-        return this.mul(other);
+        return this.mul(-1.0f);
     }
 
     public Value sub(Value other) {
@@ -85,7 +84,7 @@ public class Value {
 
     public Value div(float other) {
         Value otherV = new Value(other, new HashSet<Value>(), Operator.NONE);
-        return this.mul(otherV.pow(-1.0f));
+        return this.div(otherV);
     }
 
     public Value relu() {
@@ -149,6 +148,6 @@ public class Value {
 
     @Override
     public String toString() {
-        return "Value(data=" + this.data + ", grad=" + this.grad + ")";
+        return "Value(data=" + this.data + ", grad=" + this.grad + ", children=" + this._prev.toString();
     }
 }

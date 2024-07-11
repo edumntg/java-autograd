@@ -14,23 +14,18 @@ public class Layer extends Module {
         }
     }
 
-    public Value[][] forward(Value[][] x) {
+    public Value[] forward(Value[] x) {
         // Input is (nSamples, ...)
         // Output should be (nSamples, this.neurons.length)
-        Value[][] out = new Value[x.length][neurons.length];
-        //int i = 0;
-        int j;
-        for(int i = 0; i < x.length; i++) {
-            j = 0;
-            for(Neuron n: neurons) {
-                out[i][j] = n.forward(x[i]);
-                j++;
-            }
+        Value[] out = new Value[this.neurons.length];
+        for(int i = 0; i < this.neurons.length; i++) {
+            out[i] = this.neurons[i].forward(x);
         }
 
         return out;
     }
 
+    @Override
     public List<Value> parameters() {
         List<Value> out = new ArrayList<Value>();
         for(Neuron n: neurons) {

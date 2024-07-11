@@ -29,11 +29,11 @@ public class Neuron extends Module {
     }
 
     public Value forward(Value[] x) {
-        Value output = new Value(0.0f);
-        for(int i = 0; i < this.w.length; i++) {
-            for(int j = 0; j < x.length; j++) {
-                output.add(this.w[i].mul(x[j]));
-            }
+        Value output = (this.w[0].mul(x[0])).add(this.b);
+
+        // x and this.w must have same length
+        for(int i = 1; i < this.w.length; i++) {
+            output = output.add((this.w[i].mul(x[i])).add(this.b)); // w*x + b
         }
 
         if(nonLin) {

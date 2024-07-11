@@ -11,43 +11,46 @@ public class Main {
         int N = 100; // number of samples
 
         int nFeatures = 1;
-        Value[][] x = new Value[N][nFeatures];
+        Value[] x = new Value[N];
         Value[] y = new Value[N];
         // Fill x
+        //float yval;
         for(int i = 0; i < N; i++) {
-            for(int j = 0 ; j < nFeatures ; j++) {
-                x[i][j] = Value.random();
-            }
+            //yval = 0;
+            x[i] = Value.random();
+//            for(int j = 0 ; j < nFeatures ; j++) {
+//                x[i][j] = Value.random();
+//                yval = 0.5f*x[i][j].data + 3.0f;
+//            }
             //x[i] = new Value(i);
-            y[i] = new Value(10*i + 20);
+            y[i] = new Value(0.5f*x[i].data + 3.0f);
         }
 
         // Now, create a MLP with 2 layers
         MLP model = new MLP();
         model.add(new Layer(nFeatures, 32));
-        model.add(new Layer(32, 64));
-        model.add(new Layer(64, 1));
+        model.add(new Layer(32, 100));
+        //model.add(new Layer(64, 1));
 
         // Create loss
         MSELoss criterion = new MSELoss();
         Value loss = null;
 
         // Declare number of epochs
-        int EPOCHS = 10;
+        int EPOCHS = 30;
         // Declare learning rate
-        float lr = 1E-3f;
+        float lr = 1E-2f;
 
+        Value[] scores = new Value[N];
         for(int epoch = 1; epoch <= EPOCHS; epoch++) {
             // Set all gradients to zero
-            //model.zeroGrad();
+            model.zeroGrad();
 
             // Compute scores
-            Value[][] scores = model.forward(x);
-
-            Value[] scoresFlattened = Value.flatten(scores);
+            scores = model.forward(x);
 
             // Compute loss
-            loss = criterion.forwardV(scoresFlattened, y);
+            loss = criterion.forwardV(y, scores);
 
             // Compute gradients
             loss.backward();
@@ -58,10 +61,16 @@ public class Main {
             }
 
             // Print loss
-            System.out.println(String.format("Epoch %d, loss: %.4f", epoch, loss.data));
+            System.out.println(String.format("Epoch %d, loss: %s", epoch, loss.data));
         }
 
-        System.out.println(loss.toString());
+        // Predict
+        Value[] yPred = model.forward(x);
+        for(int i = 0; i < N; i++) {
+            System.out.println(String.format("(yhat=%.4f, ytrue=%.4f)", yPred[i].data, y[i].data));
+        }
+
+        //System.out.println(loss.toString());
 
 
 //        Value x = new Value(-4.0f);

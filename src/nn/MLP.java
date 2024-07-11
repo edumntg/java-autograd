@@ -19,14 +19,14 @@ public class MLP extends Module {
         this.layers.add(layer);
     }
 
-    public Value[][] forward(Value[][] x) {
+    public Value[] forward(Value[] x) {
         // x has size (nSamples, nFeatures)
         int i = 0;
         for(Layer layer : layers) {
-            x = layer.forward(x); // output should be (nSamples, layer.neurons.length)
+            x = layer.forward(x);
         }
 
-        return x; // output should be (nSamples, lastLayer.neurons.length)
+        return x;
     }
 
     @Override
