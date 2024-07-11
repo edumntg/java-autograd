@@ -1,20 +1,17 @@
 package nn;
 
+import engine.Value;
 import tensor.Tensor;
 
 import java.util.List;
 
-public class Module {
-    private List<Tensor> parameters;
-
+public abstract class Module {
     public void zeroGrad() {
-        for(Tensor p: parameters) {
-            p.gradient.zero_();
-        }
+        return;
     }
 
-    public List<Tensor> parameters() {
-        return this.parameters;
+    public List<Value> parameters() {
+        return null;
     }
 
 }

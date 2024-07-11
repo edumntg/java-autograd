@@ -12,6 +12,8 @@ public class Value {
     public Set<Value> _prev;
     public Operator _op;
 
+    public static final Random rng = new Random();
+
     public Value(float data, HashSet<Value> children, Operator op) {
         this.data = data;
         this.grad = 0;
@@ -77,6 +79,15 @@ public class Value {
         return this.add(other.neg());
     }
 
+    public Value div(Value other) {
+        return this.mul(other.pow(-1.0f));
+    }
+
+    public Value div(float other) {
+        Value otherV = new Value(other, new HashSet<Value>(), Operator.NONE);
+        return this.mul(otherV.pow(-1.0f));
+    }
+
     public Value relu() {
         float current = this.data;
         if(current < 0) {
@@ -117,6 +128,23 @@ public class Value {
             }
             topo.add(v);
         }
+    }
+
+    public void optimize(float lr) {
+        this.data -= lr*this.grad;
+    }
+
+    public static Value random() {
+        return new Value(Value.rng.nextFloat());
+    }
+
+    public static Value[] flatten(Value[][] arr) {
+        Value[] out = new Value[arr.length];
+        for(int i = 0; i < arr.length; i++) {
+            out[i] = new Value(arr[i][0].data);
+        }
+
+        return out;
     }
 
     @Override

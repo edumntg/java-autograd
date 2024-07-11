@@ -5,13 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ca9ad6c3-000b-4a55-8119-e272009079b0" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/engine/Value.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/nn/Module.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/tensor/BackwardMethod.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/nn/Layer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/nn/MLP.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/nn/Neuron.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tensor/Tensor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tensor/Tensor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tensor/TensorOperation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tensor/TensorOperation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/engine/Value.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/engine/Value.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/loss/ILoss.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/loss/ILoss.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/loss/Loss.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/loss/Loss.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/loss/MSELoss.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/loss/MSELoss.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/nn/Module.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/nn/Module.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -129,7 +132,7 @@
       <workItem from="1720412646563" duration="1357000" />
       <workItem from="1720449274125" duration="12583000" />
       <workItem from="1720530747960" duration="10170000" />
-      <workItem from="1720625837211" duration="8616000" />
+      <workItem from="1720625837211" duration="17629000" />
     </task>
     <servers />
   </component>
