@@ -1,7 +1,6 @@
 package optimizer;
 
 import engine.Value;
-import tensor.Tensor;
 
 import java.util.List;
 

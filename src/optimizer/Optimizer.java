@@ -1,7 +1,6 @@
 package optimizer;
 
 import engine.Value;
-import tensor.Tensor;
 
 import java.util.List;
 
@@ -9,19 +8,23 @@ public class Optimizer implements IOptimizer {
     private List<Value> parameters;
     public float lr;
 
+    public Scheduler scheduler;
+    public int stepsPerformed;
+
     public Optimizer(List<Value> parameters, float learningRate) {
         if(learningRate <= 0.0f) {
             learningRate = 1E-3f;
         }
         this.parameters = parameters;
         this.lr = learningRate;
+        this.scheduler = () -> {return;};
+        this.stepsPerformed = 0;
     }
 
     @Override
     public void step() {
-        for(Value param : this.parameters) {
-            param.optimize(this.lr);
-        }
+        this.scheduler.step();
+        this.stepsPerformed++;
     }
 
     @Override

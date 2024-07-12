@@ -5,14 +5,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ca9ad6c3-000b-4a55-8119-e272009079b0" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/optimizer/Scheduler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/engine/Value.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/engine/Value.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/loss/ILoss.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/loss/ILoss.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/loss/Loss.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/loss/Loss.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/loss/MSELoss.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/loss/MSELoss.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/nn/Layer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/nn/Layer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/nn/MLP.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/nn/MLP.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/nn/Module.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/nn/Module.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/optimizer/IOptimizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/optimizer/IOptimizer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/optimizer/Optimizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/optimizer/Optimizer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/optimizer/SGD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/optimizer/SGD.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tensor/Tensor.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tensor/TensorOperation.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/tensor/TensorTest.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,14 +34,18 @@
         <option value="Enum" />
         <option value="JUnit5 Test Class" />
         <option value="JUnit4 Test Class" />
-        <option value="Interface" />
         <option value="Class" />
+        <option value="Interface" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="KubernetesApiPersistence"><![CDATA[{}]]></component>
+  <component name="KubernetesApiProvider"><![CDATA[{
+  "isMigrated": true
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 8
 }</component>
@@ -44,35 +57,35 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
-    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
-    &quot;JUnit.TensorTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.TensorTest.mul.executor&quot;: &quot;Debug&quot;,
-    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary&quot;: &quot;JUnit4&quot;,
-    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit4&quot;: &quot;&quot;,
-    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5&quot;: &quot;&quot;,
-    &quot;create.test.in.the.same.root&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;onboarding.tips.debug.path&quot;: &quot;C:/Users/Eduardo Trabajo/Desktop/My Github Repos/java-nn/test/src/Main.java&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Main.executor": "Run",
+    "Downloaded.Files.Path.Enabled": "false",
+    "JUnit.TensorTest.executor": "Run",
+    "JUnit.TensorTest.mul.executor": "Debug",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "false",
+    "Repository.Attach.Sources": "false",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit4",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit4": "",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
+    "create.test.in.the.same.root": "true",
+    "git-widget-placeholder": "master",
+    "kotlin-language-version-configured": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "onboarding.tips.debug.path": "C:/Users/Eduardo Trabajo/Desktop/My Github Repos/java-nn/test/src/Main.java",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CreateTestDialog.Recents.Supers">
       <recent name="" />
@@ -93,7 +106,7 @@
       <module name="java-nn" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="tensor.*" />
+          <option name="PATTERN" value="engine.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -132,6 +145,7 @@
       <workItem from="1720530747960" duration="10170000" />
       <workItem from="1720625837211" duration="18051000" />
       <workItem from="1720683929344" duration="3658000" />
+      <workItem from="1720759403194" duration="2678000" />
     </task>
     <servers />
   </component>

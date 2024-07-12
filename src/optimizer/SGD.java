@@ -1,7 +1,6 @@
 package optimizer;
 
 import engine.Value;
-import tensor.Tensor;
 
 import java.util.List;
 
@@ -22,6 +21,7 @@ public class SGD extends Optimizer {
 
     @Override
     public void step() {
+        super.step();
         int i = 0;
         for(Value param : this.parameters()) {
             velocity[i] = this.momentum * velocity[i] - this.lr * param.grad;

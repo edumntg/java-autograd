@@ -112,10 +112,8 @@ public class Value {
         buildTopo(this, topo, visited);
         this.grad = 1.0f;
 
-        Value v;
         for(int i = topo.size() - 1; i >=0; i--) {
-            v = topo.get(i);
-            v._backward.run();
+            topo.get(i)._backward.run();
         }
     }
 
