@@ -1,50 +1,46 @@
 package optimizer;
 
+import engine.Value;
 import tensor.Tensor;
 
 import java.util.List;
 
 public class Optimizer implements IOptimizer {
-    private List<Tensor> parameters;
-    private float learningRate;
+    private List<Value> parameters;
+    public float lr;
 
-    public Optimizer(List<Tensor> parameters, float learningRate) {
+    public Optimizer(List<Value> parameters, float learningRate) {
         if(learningRate <= 0.0f) {
-            learningRate = 1E-4f;
+            learningRate = 1E-3f;
         }
         this.parameters = parameters;
-        this.learningRate = learningRate;
+        this.lr = learningRate;
     }
 
     @Override
     public void step() {
-        for(Tensor p: parameters) {
-            p.update(-this.learningRate);
+        for(Value param : this.parameters) {
+            param.optimize(this.lr);
         }
     }
 
     @Override
-    public List<Tensor> getParameters() {
-        return this.parameters();
-    }
-
-    @Override
-    public List<Tensor> parameters() {
+    public List<Value> parameters() {
         return this.parameters;
     }
 
     @Override
     public void print() {
-        for(Tensor p: parameters) {
-            p.print();
+        for(Value param: this.parameters) {
+            System.out.println(param.toString());
         }
     }
 
     @Override
     public void zeroGrad() {
         // Reset all gradients
-        for(Tensor parameter: parameters) {
-            parameter.gradient.zero_();
+        for(Value param: this.parameters) {
+            param.grad = 0.0f;
         }
     }
 }

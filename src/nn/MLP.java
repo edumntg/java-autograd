@@ -19,14 +19,18 @@ public class MLP extends Module {
         this.layers.add(layer);
     }
 
-    public Value[] forward(Value[] x) {
+    public Value[] forward(Value[][] x) {
         // x has size (nSamples, nFeatures)
         int i = 0;
         for(Layer layer : layers) {
+//            System.out.println(String.format("*********\nShape before layer %d with shape (%d, %d): (%d, %d)", i, layer.W.length, layer.W[0].length, x.length, x[0].length));
             x = layer.forward(x);
+//            System.out.println(String.format("Shape after layer %d with shape (%d, %d): (%d, %d)\n*********\n", i, layer.W.length, layer.W[0].length, x.length, x[0].length));
+            i++;
         }
 
-        return x;
+        // In the end, x should be: (nSamples, 1), so we reduce it to just (nSamples,)
+        return Value.flatten(x); // from 2d to 1d
     }
 
     @Override

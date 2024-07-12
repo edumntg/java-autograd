@@ -140,7 +140,7 @@ public class Value {
     public static Value[] flatten(Value[][] arr) {
         Value[] out = new Value[arr.length];
         for(int i = 0; i < arr.length; i++) {
-            out[i] = new Value(arr[i][0].data);
+            out[i] = arr[i][0];
         }
 
         return out;
