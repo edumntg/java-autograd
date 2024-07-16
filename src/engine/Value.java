@@ -85,6 +85,10 @@ public class Value {
         return this.add(other.neg());
     }
 
+    public Value sub(float other) {
+        return this.add(-other);
+    }
+
     public Value div(Value other) {
         return this.mul(other.pow(-1.0f));
     }
@@ -139,7 +143,7 @@ public class Value {
     }
 
     public static Value random() {
-        return new Value(Value.rng.nextFloat());
+        return new Value(Value.rng.nextFloat()*(1 + 1) - 1);
     }
 
     public static Value[] flatten(Value[][] arr) {
