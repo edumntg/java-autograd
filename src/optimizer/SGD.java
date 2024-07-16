@@ -6,7 +6,7 @@ import java.util.List;
 
 public class SGD extends Optimizer {
     private float momentum;
-    private float[] velocity;
+    private final float[] velocity;
 
     public SGD(List<Value> parameters, float learningRate) {
         super(parameters, learningRate);

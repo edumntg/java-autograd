@@ -74,7 +74,7 @@ public class Value {
     }
 
     public Value pow(float other) {
-        Value out = new Value((float) Math.pow(this.data, other), new HashSet<Value>(Arrays.asList(this)), Operator.POW);
+        Value out = new Value((float) Math.pow(this.data, other), new HashSet<Value>(List.of(this)), Operator.POW);
         out._backward = () -> {
             if(!this.requiresGrad) {
                 return;
@@ -112,7 +112,7 @@ public class Value {
             current = 0.0f;
         }
 
-        Value out = new Value(current, new HashSet<Value>(Arrays.asList(this)), Operator.RELU);
+        Value out = new Value(current, new HashSet<Value>(List.of(this)), Operator.RELU);
         out._backward = () -> {
             if(!this.requiresGrad) {
                 return;
@@ -168,6 +168,13 @@ public class Value {
 
     public float item() {
         return this.data;
+    }
+
+    public Value detach() {
+        // Returns a new Value with same data but detached from graph
+        Value out = new Value(this.data);
+        out.requiresGrad = false;
+        return out;
     }
 
     @Override

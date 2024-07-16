@@ -5,7 +5,7 @@ import engine.Value;
 import java.util.List;
 
 public class Optimizer implements IOptimizer {
-    private List<Value> parameters;
+    private final List<Value> parameters;
     public float lr;
 
     public Scheduler scheduler;

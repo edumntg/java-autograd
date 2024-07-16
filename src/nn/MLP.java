@@ -9,7 +9,7 @@ public class MLP extends Module {
     /**
      * Multi-Layer perceptron
      */
-    private List<Layer> layers;
+    private final List<Layer> layers;
 
     public MLP() {
         layers = new ArrayList<Layer>();
@@ -35,9 +35,7 @@ public class MLP extends Module {
     public List<Value> parameters() {
         List<Value> out = new ArrayList<Value>();
         for(Layer layer : this.layers) {
-            for(Value value : layer.parameters()) {
-                out.add(value);
-            }
+            out.addAll(layer.parameters());
         }
 
         return out;

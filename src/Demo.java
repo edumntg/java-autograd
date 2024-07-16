@@ -17,6 +17,11 @@ import java.util.List;
 public class Demo {
     public static void main(String[] args) throws Exception {
 
+        // Training parameters
+        float lr = 1E-2f;
+        float momentum = 0.0f;
+        int EPOCHS = 50;
+
         // Set seed
         Value.rng.setSeed(1218);
 
@@ -33,8 +38,10 @@ public class Demo {
                 String[] values = line.split(",");
                 for(int j = 0; j < 5; j++) {
                     x[i][j] = new Value(Float.parseFloat(values[j]));
+                    x[i][j].requiresGrad = false;
                 }
                 y[i] = new Value(Float.parseFloat(values[5]));
+                y[i].requiresGrad = false;
                 i++;
             }
         } catch(Exception ex) {
@@ -47,20 +54,20 @@ public class Demo {
         scaler.fitTransform(x);
         scaler.fitTransform(y);
 
-        // Create model with one hidden layer
+        // Create model
         MLP model = new MLP();
         model.add(new Layer(5, 16)); // input layer
-        //model.add(new Layer(64, 32)); // hidden
+        //model.add(new Layer(16, 8)); // hidden
         model.add(new Layer(16, 1)); // output
 
         // Criterion and optimizer
-        Optimizer optimizer = new SGD(model.parameters(), 1E-2f, 0.05f);
+        Optimizer optimizer = new SGD(model.parameters(), lr, momentum);
         Loss criterion = new MSELoss();
 
         // Train
         Value[] scores;
         Value loss = null;
-        for(int epoch = 1; epoch <= 100; epoch++) {
+        for(int epoch = 1; epoch <= EPOCHS; epoch++) {
             optimizer.zeroGrad(); // reset all gradients;
 
             // Compute scores

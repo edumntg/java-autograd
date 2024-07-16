@@ -9,6 +9,7 @@ public class StandardScaler implements IScaler {
     private float[] std;
 
     private boolean single;
+    
     @Override
     public void fit(Value[] x) {
         // Compute std and mean
@@ -17,14 +18,14 @@ public class StandardScaler implements IScaler {
         int N = x.length;
 
         // Mean
-        for(int i = 0; i < N; i++) {
-            mean += x[i].item();
-            std += (float) Math.pow(x[i].item()-mean, 2);
+        for (Value item : x) {
+            mean += item.item();
+            std += (float) Math.pow(item.item() - mean, 2);
         }
 
         // Std
-        for(int i = 0; i < N; i++) {
-            std += (float) Math.pow(x[i].item()-mean, 2);
+        for (Value value : x) {
+            std += (float) Math.pow(value.item() - mean, 2);
         }
         mean /= N;
         std = (float) Math.sqrt(std/N);
@@ -45,14 +46,14 @@ public class StandardScaler implements IScaler {
         float columnStd = 0.0f;
         for(int j = 0; j < x[0].length; j++) {
             // Loop through columns
-            for(int i = 0; i < x.length; i++) {
+            for (Value[] value : x) {
                 // Loop through each value in column j
-                columnMean += x[i][j].item();
+                columnMean += value[j].item();
             }
             columnMean /= x.length;
-            for(int i = 0; i < x.length; i++) {
+            for (Value[] values : x) {
                 // Loop through each value in column j
-                columnStd += (float)Math.pow(x[i][j].item()-columnMean, 2);
+                columnStd += (float) Math.pow(values[j].item() - columnMean, 2);
             }
             columnStd = (float)Math.sqrt(columnStd / x.length);
 

@@ -34,9 +34,9 @@ public class Main {
 
         // Now, create MLP with 2 layers
         MLP model = new MLP();
-        model.add(new Layer(nFeatures, 128)); // input layer
-        model.add(new Layer(128, 64));
-        model.add(new Layer(64, 1)); // output
+        model.add(new Layer(nFeatures, 16)); // input layer
+        //model.add(new Layer(128, 64));
+        model.add(new Layer(16, 1)); // output
 
         // Create loss
         MSELoss criterion = new MSELoss();
@@ -73,7 +73,7 @@ public class Main {
             timesPerEpoch[epoch-1] = elapsed;
 
             // Print loss
-            System.out.println(String.format("Epoch %d, loss: %s, lr = %.10f, time = %o (ms)", epoch, loss.data, optimizer.lr, elapsed));
+            System.out.printf("Epoch %d, loss: %s, lr = %.10f, time = %o (ms)%n", epoch, loss.data, optimizer.lr, elapsed);
            //System.out.println(loss.toString());
         }
 
@@ -83,24 +83,6 @@ public class Main {
         }
 
         avg /= (float)EPOCHS;
-        System.out.println(String.format("\nAvg. time per epoch: %.4f (ms)", avg));
-
-//        // Predict
-//        Value[] yPred = model.forward(x);
-//        for(int i = 0; i < N; i++) {
-//            System.out.println(String.format("(xi = %.4f, yhat=%.4f, ytrue=%.4f)", x[i][0].data, yPred[i].data, y[i].data));
-//        }
-
-        //System.out.println(loss.toString());
-
-
-//        Value x = new Value(-4.0f);
-//        Value z = x.mul(2.0f).add(x.add(2));
-//        Value q = z.relu().add(z.mul(x));
-//        Value h = z.mul(z).relu();
-//        Value y = h.add(q).add(q.mul(x));
-//        y.backward();
-//        System.out.println(x.grad);
-//        System.out.println(h.data);
+        System.out.printf("\nAvg. time per epoch: %.4f (ms)%n", avg);
     }
 }

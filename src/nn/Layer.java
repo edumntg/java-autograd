@@ -3,13 +3,14 @@ package nn;
 import engine.Value;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Layer extends Module {
 
     public Value[][] W;
     public Value[] b;
-    private boolean nonLin;
+    private final boolean nonLin;
 
     public Layer(int inSize, int outSize) {
         W = new Value[inSize][outSize];
@@ -48,18 +49,12 @@ public class Layer extends Module {
          * x: (nSamples, nFeatures)
          * w: (nFeatures, nNeurons)
          * b: (nNeurons,)
-         *
+         * <p>
          * output: x*w + b = (nSamples, nNeurons)
          */
         // Apply matrix multiplication x*w + b
 
         // Initialize
-
-//        System.out.printf("Performing x*w + b. x has shape (%d, %d), w has shape (%d, %d)\n",
-//                x.length,
-//                x[0].length,
-//                W.length,
-//                W[0].length);
 
         int rows1 = x.length;
         int cols1 = x[0].length;
@@ -98,9 +93,7 @@ public class Layer extends Module {
         }
 
         // Add bias
-        for(int i = 0; i < this.b.length; i++) {
-            out.add(this.b[i]);
-        }
+        out.addAll(Arrays.asList(this.b));
 
         return out;
     }
