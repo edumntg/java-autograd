@@ -6,7 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="ca9ad6c3-000b-4a55-8119-e272009079b0" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/engine/Value.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/engine/Value.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tensor/BackwardMethod.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/engine/BackwardMethod.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,12 +82,15 @@
     <key name="CreateTestDialog.Recents.Supers">
       <recent name="" />
     </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="engine" />
+    </key>
     <key name="CreateTestDialog.RecentsKey">
       <recent name="engine" />
       <recent name="tensor" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Demo">
+  <component name="RunManager" selected="Application.Main">
     <configuration name="Demo" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Demo" />
       <module name="java-nn" />
@@ -149,8 +154,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Demo" />
         <item itemvalue="Application.Main" />
+        <item itemvalue="Application.Demo" />
         <item itemvalue="JUnit.ValueTest" />
         <item itemvalue="JUnit.ValueTest.testOperations" />
         <item itemvalue="JUnit.ValueTest.testGradients" />
@@ -183,7 +188,7 @@
       <workItem from="1720976420085" duration="2000" />
       <workItem from="1721068272700" duration="6784000" />
       <workItem from="1721089969876" duration="7539000" />
-      <workItem from="1721106252169" duration="159000" />
+      <workItem from="1721106252169" duration="597000" />
     </task>
     <servers />
   </component>

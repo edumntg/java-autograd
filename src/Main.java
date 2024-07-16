@@ -4,6 +4,7 @@ import nn.Layer;
 import nn.MLP;
 import optimizer.Optimizer;
 import optimizer.SGD;
+import scaler.StandardScaler;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
@@ -11,7 +12,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
         // Create a random dataset to fit the function y = 0.5*x1 -7.5*x2 + 12.5
         int N = 100; // number of samples
-        int EPOCHS = 1000; // number of epochs
+        int EPOCHS = 100; // number of epochs
         float lr = 1E-3f; // learning rate
 
         int nFeatures = 8;
@@ -21,13 +22,20 @@ public class Main {
         for(int i = 0; i < N; i++) {
             for(int j = 0 ; j < nFeatures ; j++) {
                 x[i][j] = Value.random();
+                x[i][j].requiresGrad = false;
             }
             y[i] = new Value((x[i][0].mul(0.5f).add(x[i][1].mul(-7.5f)).add(20.0f)).data);
+            y[i].requiresGrad = false;
         }
+
+        StandardScaler scaler = new StandardScaler();
+        scaler.fitTransform(x);
+        scaler.fitTransform(y);
 
         // Now, create MLP with 2 layers
         MLP model = new MLP();
-        model.add(new Layer(nFeatures, 64)); // input layer
+        model.add(new Layer(nFeatures, 128)); // input layer
+        model.add(new Layer(128, 64));
         model.add(new Layer(64, 1)); // output
 
         // Create loss
@@ -36,9 +44,9 @@ public class Main {
 
         // Create optimizer
         Optimizer optimizer = new SGD(model.parameters(), lr, 0.01f);
-//        optimizer.scheduler = () -> {
-//            optimizer.lr *= 0.99f;
-//        };
+        optimizer.scheduler = () -> {
+            //optimizer.lr *= 0.99f;
+        };
 
         Value[] scores = new Value[N];
         long start, end, elapsed;

@@ -1,7 +1,6 @@
 package engine;
 
 import enums.Operator;
-import tensor.BackwardMethod;
 
 import java.util.*;
 
@@ -37,8 +36,11 @@ public class Value {
         Value out = new Value(this.data + other.data, new HashSet<Value>(Arrays.asList(this, other)), Operator.ADD);
 
         out._backward = () -> {
-            this.grad += out.grad*(this.requiresGrad ? 1 : 0);
-            other.grad += out.grad*(other.requiresGrad ? 1 : 0);
+            if(!this.requiresGrad && !other.requiresGrad) {
+                return;
+            }
+            this.grad += out.grad;
+            other.grad += out.grad;
         };
 
         return out;
@@ -52,8 +54,11 @@ public class Value {
     public Value mul(Value other) {
         Value out = new Value(this.data * other.data, new HashSet<Value>(Arrays.asList(this, other)), Operator.MUL);
         out._backward = () -> {
-            this.grad += other.data * out.grad*(this.requiresGrad ? 1 : 0);
-            other.grad += this.data * out.grad*(other.requiresGrad ? 1 : 0);
+            if(!this.requiresGrad && !other.requiresGrad) {
+                return;
+            }
+            this.grad += other.data * out.grad;
+            other.grad += this.data * out.grad;
         };
 
         return out;
@@ -71,7 +76,10 @@ public class Value {
     public Value pow(float other) {
         Value out = new Value((float) Math.pow(this.data, other), new HashSet<Value>(Arrays.asList(this)), Operator.POW);
         out._backward = () -> {
-            this.grad += (float) ((other * Math.pow(this.data, other-1))*out.grad)*(this.requiresGrad ? 1 : 0);
+            if(!this.requiresGrad) {
+                return;
+            }
+            this.grad += (float) ((other * Math.pow(this.data, other-1))*out.grad);
         };
 
         return out;
@@ -106,11 +114,14 @@ public class Value {
 
         Value out = new Value(current, new HashSet<Value>(Arrays.asList(this)), Operator.RELU);
         out._backward = () -> {
+            if(!this.requiresGrad) {
+                return;
+            }
             float value = 0.0f;
             if(out.data > 0.0f) {
                 value = 1.0f;
             }
-            this.grad += (value) * out.grad*(this.requiresGrad ? 1 : 0);
+            this.grad += (value) * out.grad;
         };
 
         return out;
