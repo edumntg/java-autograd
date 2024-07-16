@@ -11,6 +11,7 @@ public class Value {
     public BackwardMethod _backward;
     public Set<Value> _prev;
     public Operator _op;
+    public boolean requiresGrad;
 
     public static final Random rng = new Random();
 
@@ -20,6 +21,7 @@ public class Value {
         this._backward = () -> { return; };
         this._prev = children;
         this._op = op;
+        this.requiresGrad = true;
     }
 
     public Value(float data) {
@@ -28,14 +30,15 @@ public class Value {
         this._backward = () -> { return; };
         this._prev = new HashSet<Value>();
         this._op = Operator.NONE;
+        this.requiresGrad = true;
     }
 
     public Value add(Value other) {
         Value out = new Value(this.data + other.data, new HashSet<Value>(Arrays.asList(this, other)), Operator.ADD);
 
         out._backward = () -> {
-            this.grad += out.grad;
-            other.grad += out.grad;
+            this.grad += out.grad*(this.requiresGrad ? 1 : 0);
+            other.grad += out.grad*(other.requiresGrad ? 1 : 0);
         };
 
         return out;
@@ -49,8 +52,8 @@ public class Value {
     public Value mul(Value other) {
         Value out = new Value(this.data * other.data, new HashSet<Value>(Arrays.asList(this, other)), Operator.MUL);
         out._backward = () -> {
-            this.grad += other.data * out.grad;
-            other.grad += this.data * out.grad;
+            this.grad += other.data * out.grad*(this.requiresGrad ? 1 : 0);
+            other.grad += this.data * out.grad*(other.requiresGrad ? 1 : 0);
         };
 
         return out;
@@ -61,10 +64,14 @@ public class Value {
         return this.mul(otherValue);
     }
 
+    public Value pow(int other) {
+        return this.pow((float)other);
+    }
+
     public Value pow(float other) {
         Value out = new Value((float) Math.pow(this.data, other), new HashSet<Value>(Arrays.asList(this)), Operator.POW);
         out._backward = () -> {
-            this.grad += (float) ((other * Math.pow(this.data, other-1.0f))*out.grad);
+            this.grad += (float) ((other * Math.pow(this.data, other-1))*out.grad)*(this.requiresGrad ? 1 : 0);
         };
 
         return out;
@@ -96,10 +103,10 @@ public class Value {
         Value out = new Value(current, new HashSet<Value>(Arrays.asList(this)), Operator.RELU);
         out._backward = () -> {
             float value = 0.0f;
-            if(out.data > 0) {
+            if(out.data > 0.0f) {
                 value = 1.0f;
             }
-            this.grad += (value) * out.grad;
+            this.grad += (value) * out.grad*(this.requiresGrad ? 1 : 0);
         };
 
         return out;
@@ -144,8 +151,12 @@ public class Value {
         return out;
     }
 
+    public float item() {
+        return this.data;
+    }
+
     @Override
     public String toString() {
-        return "Value(data=" + this.data + ", grad=" + this.grad + ", children=" + this._prev.toString();
+        return "Value(data=" + this.data + ", grad=" + this.grad + ", children=" + this._prev.toString() + ")";
     }
 }
