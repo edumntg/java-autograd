@@ -5,6 +5,7 @@ import nn.Layer;
 import nn.MLP;
 import optimizer.Optimizer;
 import optimizer.SGD;
+import scaler.StandardScaler;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -42,6 +43,9 @@ public class Demo {
         }
 
         // Scale dataset
+        StandardScaler scaler = new StandardScaler();
+        scaler.fitTransform(x);
+        scaler.fitTransform(y);
 
         // Create model with one hidden layer
         MLP model = new MLP();
@@ -49,14 +53,8 @@ public class Demo {
         //model.add(new Layer(64, 32)); // hidden
         model.add(new Layer(16, 1)); // output
 
-        for(int i = 0; i < 1; i++) {
-            for(int j = 0; j < model.getLayers().get(0).W[0].length; j++) {
-                System.out.println(model.getLayers().get(0).W[i][j]);
-            }
-        }
-
         // Criterion and optimizer
-        Optimizer optimizer = new SGD(model.parameters(), 1E-4f, 0.05f);
+        Optimizer optimizer = new SGD(model.parameters(), 1E-2f, 0.05f);
         Loss criterion = new MSELoss();
 
         // Train
