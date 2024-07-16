@@ -26,6 +26,7 @@ public class SGD extends Optimizer {
         for(Value param : this.parameters()) {
             velocity[i] = this.momentum * velocity[i] - this.lr * param.grad;
             param.data += velocity[i];
+            i++;
         }
     }
 }

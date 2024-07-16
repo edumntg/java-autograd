@@ -5,7 +5,7 @@ import engine.Value;
 public class Loss implements ILoss {
 
     @Override
-    public Value forwardV(Value[] yTrue, Value[] yPred) {
+    public Value forward(Value[] yTrue, Value[] yPred) {
         return null;
     }
 }

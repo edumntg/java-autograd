@@ -22,7 +22,9 @@ public class MLP extends Module {
     public Value[] forward(Value[][] x) {
         // x has size (nSamples, nFeatures)
         for(Layer layer : layers) {
+//            System.out.printf("Before fforward: (%d, %d)\n", x.length, x[0].length);
             x = layer.forward(x);
+//            System.out.printf("After fforward: (%d, %d)\n", x.length, x[0].length);
         }
 
         // In the end, x should be: (nSamples, 1), so we reduce it to just (nSamples,)

@@ -52,19 +52,28 @@ public class Layer extends Module {
          * output: x*w + b = (nSamples, nNeurons)
          */
         // Apply matrix multiplication x*w + b
-        Value[][] out = new Value[x.length][b.length]; // (nSamples, nNeurons)
+
         // Initialize
 
-        // Apply matrix multiplication x*w + b
-        for(int i = 0; i < x.length; i++) {
-            for(int j = 0; j < W[0].length; j++) {
-                for(int k = 0; k < x[0].length; k++) {
-                    if(out[i][j] != null) {
-                        out[i][j] = out[i][j].add(x[i][k].mul(W[k][j]));
-                    } else {
-                        out[i][j] = x[i][k].mul(W[k][j]);
-                    }
+//        System.out.printf("Performing x*w + b. x has shape (%d, %d), w has shape (%d, %d)\n",
+//                x.length,
+//                x[0].length,
+//                W.length,
+//                W[0].length);
 
+        int rows1 = x.length;
+        int cols1 = x[0].length;
+        int rows2 = W.length;
+        int cols2 = W[0].length;
+
+        Value[][] out = new Value[rows1][cols2]; // (nSamples, nNeurons)
+
+        // Apply matrix multiplication x*w + b
+        for(int i = 0; i < rows1; i++) {
+            for(int j = 0; j < cols2; j++) {
+                out[i][j] = new Value(0.0f);
+                for(int k = 0; k < rows2; k++) {
+                    out[i][j] = out[i][j].add(x[i][k].mul(W[k][j]));
                 }
                 // Add bias
                 out[i][j] = out[i][j].add(b[j]);

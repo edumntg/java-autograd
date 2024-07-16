@@ -12,9 +12,9 @@ public class Main {
         // Create a random dataset to fit the function y = 0.5*x1 -7.5*x2 + 12.5
         int N = 100; // number of samples
         int EPOCHS = 1000; // number of epochs
-        float lr = 1E-2f; // learning rate
+        float lr = 1E-3f; // learning rate
 
-        int nFeatures = 2;
+        int nFeatures = 8;
         Value[][] x = new Value[N][nFeatures];
         Value[] y = new Value[N];
         // Fill x and y
@@ -35,10 +35,10 @@ public class Main {
         Value loss = null;
 
         // Create optimizer
-        Optimizer optimizer = new SGD(model.parameters(), lr, 0.00f);
-        optimizer.scheduler = () -> {
-            optimizer.lr *= 0.99f;
-        };
+        Optimizer optimizer = new SGD(model.parameters(), lr, 0.01f);
+//        optimizer.scheduler = () -> {
+//            optimizer.lr *= 0.99f;
+//        };
 
         Value[] scores = new Value[N];
         long start, end, elapsed;
@@ -52,7 +52,7 @@ public class Main {
             scores = model.forward(x);
 
             // Compute loss
-            loss = criterion.forwardV(y, scores);
+            loss = criterion.forward(y, scores);
 
             // Compute gradients
             loss.backward();
@@ -66,6 +66,7 @@ public class Main {
 
             // Print loss
             System.out.println(String.format("Epoch %d, loss: %s, lr = %.10f, time = %o (ms)", epoch, loss.data, optimizer.lr, elapsed));
+           //System.out.println(loss.toString());
         }
 
         float avg = 0.0f;
