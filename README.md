@@ -5,7 +5,7 @@ This project was created for educational purposes
 ### Example usage
 ```java
 MLP model = new MLP();
-model.add(new Layer(2, 64));
+model.add(new Layer(2, 64)); // 2 input features
 model.add(new Layer(64, 32));
 model.add(new Layer(32, 1)); // 1 output
 
@@ -25,6 +25,15 @@ loss.backward();
 
 // Update parameters
 optimizer.step();
+```
+
+If you want to add an scheduler to the optimizer, you can do it in the following way:
+```java
+optimizer.scheduler = () -> {
+    // multiply learning rate by 0.99 on each step
+    // scheduler is executed BEFORE parameter optimization
+    optimizer.lr *= 0.99f;
+};
 ```
 
 --------------
