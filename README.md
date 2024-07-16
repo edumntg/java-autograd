@@ -126,3 +126,7 @@ for(int epoch = 1; epoch <= 100; epoch++) {
     //System.out.println(loss.toString());
 }
 ```
+
+TODO:
+* Parallelize matrix multiplication
+* Add more loss functions and optimizers
