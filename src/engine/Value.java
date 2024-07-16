@@ -1,7 +1,5 @@
 package engine;
 
-import enums.Operator;
-
 import java.util.*;
 
 public class Value {
@@ -9,17 +7,15 @@ public class Value {
     public float grad;
     public BackwardMethod _backward;
     public Set<Value> _prev;
-    public Operator _op;
     public boolean requiresGrad;
 
     public static final Random rng = new Random();
 
-    public Value(float data, HashSet<Value> children, Operator op) {
+    public Value(float data, HashSet<Value> children) {
         this.data = data;
         this.grad = 0;
         this._backward = () -> { return; };
         this._prev = children;
-        this._op = op;
         this.requiresGrad = true;
     }
 
@@ -28,12 +24,11 @@ public class Value {
         this.grad = 0;
         this._backward = () -> { return; };
         this._prev = new HashSet<Value>();
-        this._op = Operator.NONE;
         this.requiresGrad = true;
     }
 
     public Value add(Value other) {
-        Value out = new Value(this.data + other.data, new HashSet<Value>(Arrays.asList(this, other)), Operator.ADD);
+        Value out = new Value(this.data + other.data, new HashSet<Value>(Arrays.asList(this, other)));
 
         out._backward = () -> {
             if(!this.requiresGrad && !other.requiresGrad) {
@@ -47,12 +42,12 @@ public class Value {
     }
 
     public Value add(float other) {
-        Value otherValue = new Value(other, new HashSet<Value>(), Operator.NONE);
+        Value otherValue = new Value(other, new HashSet<Value>());
         return this.add(otherValue);
     }
 
     public Value mul(Value other) {
-        Value out = new Value(this.data * other.data, new HashSet<Value>(Arrays.asList(this, other)), Operator.MUL);
+        Value out = new Value(this.data * other.data, new HashSet<Value>(Arrays.asList(this, other)));
         out._backward = () -> {
             if(!this.requiresGrad && !other.requiresGrad) {
                 return;
@@ -65,7 +60,7 @@ public class Value {
     }
 
     public Value mul(float other) {
-        Value otherValue = new Value(other, new HashSet<Value>(), Operator.NONE);
+        Value otherValue = new Value(other, new HashSet<Value>());
         return this.mul(otherValue);
     }
 
@@ -74,7 +69,7 @@ public class Value {
     }
 
     public Value pow(float other) {
-        Value out = new Value((float) Math.pow(this.data, other), new HashSet<Value>(List.of(this)), Operator.POW);
+        Value out = new Value((float) Math.pow(this.data, other), new HashSet<Value>(List.of(this)));
         out._backward = () -> {
             if(!this.requiresGrad) {
                 return;
@@ -102,8 +97,55 @@ public class Value {
     }
 
     public Value div(float other) {
-        Value otherV = new Value(other, new HashSet<Value>(), Operator.NONE);
+        Value otherV = new Value(other, new HashSet<Value>());
         return this.div(otherV);
+    }
+
+    public Value inv() {
+        return this.pow(-1.0f);
+    }
+
+    public Value exp() {
+        Value out = new Value((float)Math.exp(this.data), new HashSet<Value>(List.of(this)));
+        out._backward = () -> {
+            if(!this.requiresGrad) {
+                return;
+            }
+
+            this.grad += (float)Math.exp(this.data)*out.grad;
+
+        };
+
+        return out;
+    }
+
+    public Value abs() {
+        Value out = new Value((float)Math.abs(this.data), new HashSet<Value>(List.of(this)));
+        out._backward = () -> {
+            if(!this.requiresGrad) {
+                return;
+            }
+            float value = -1.0f;
+            if(this.data > 0) {
+                value = 1.0f;
+            }
+
+            this.grad += value*out.grad;
+        };
+
+        return out;
+    }
+
+    public Value log() {
+        Value out = new Value((float)Math.log(this.data), new HashSet<Value>(List.of(this)));
+        out._backward = () -> {
+            if(!this.requiresGrad) {
+                return;
+            }
+            this.grad += this.inv().data*out.grad;
+        };
+
+        return out;
     }
 
     public Value relu() {
@@ -112,7 +154,7 @@ public class Value {
             current = 0.0f;
         }
 
-        Value out = new Value(current, new HashSet<Value>(List.of(this)), Operator.RELU);
+        Value out = new Value(current, new HashSet<Value>(List.of(this)));
         out._backward = () -> {
             if(!this.requiresGrad) {
                 return;
@@ -125,6 +167,10 @@ public class Value {
         };
 
         return out;
+    }
+
+    public Value sigmoid() {
+        return this.neg().exp().add(1.0f).inv();
     }
 
     public void backward() throws Exception {
