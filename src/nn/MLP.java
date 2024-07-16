@@ -34,13 +34,17 @@ public class MLP extends Module {
     @Override
     public List<Value> parameters() {
         List<Value> out = new ArrayList<Value>();
-        for(Layer layer : layers) {
+        for(Layer layer : this.layers) {
             for(Value value : layer.parameters()) {
                 out.add(value);
             }
         }
 
         return out;
+    }
+
+    public List<Layer> getLayers() {
+        return this.layers;
     }
 
     @Override
