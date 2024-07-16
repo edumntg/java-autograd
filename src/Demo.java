@@ -15,6 +15,10 @@ import java.util.List;
 
 public class Demo {
     public static void main(String[] args) throws Exception {
+
+        // Set seed
+        Value.rng.setSeed(1218);
+
         // Read dataset
         List<List<String>> records = new ArrayList<>();
         Value[][] x = new Value[5000][5]; // 5000 samples, 5 features
@@ -37,11 +41,19 @@ public class Demo {
             return;
         }
 
+        // Scale dataset
+
         // Create model with one hidden layer
         MLP model = new MLP();
-        model.add(new Layer(5, 6)); // input layer
+        model.add(new Layer(5, 16)); // input layer
         //model.add(new Layer(64, 32)); // hidden
-        model.add(new Layer(6, 1)); // output
+        model.add(new Layer(16, 1)); // output
+
+        for(int i = 0; i < 1; i++) {
+            for(int j = 0; j < model.getLayers().get(0).W[0].length; j++) {
+                System.out.println(model.getLayers().get(0).W[i][j]);
+            }
+        }
 
         // Criterion and optimizer
         Optimizer optimizer = new SGD(model.parameters(), 1E-4f, 0.05f);

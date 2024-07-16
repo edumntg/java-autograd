@@ -5,19 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ca9ad6c3-000b-4a55-8119-e272009079b0" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Demo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/optimizer/Adam.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/engine/ValueTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/scaler/IScaler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/scaler/StandardScaler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Demo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Demo.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/engine/Value.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/engine/Value.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/loss/ILoss.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/loss/ILoss.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/loss/Loss.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/loss/Loss.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/loss/MSELoss.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/loss/MSELoss.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/nn/Layer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/nn/Layer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/nn/MLP.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/nn/MLP.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/optimizer/SGD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/optimizer/SGD.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,8 +22,8 @@
       <list>
         <option value="Enum" />
         <option value="JUnit5 Test Class" />
-        <option value="Interface" />
         <option value="JUnit4 Test Class" />
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
@@ -192,7 +185,7 @@
       <workItem from="1720973887072" duration="600000" />
       <workItem from="1720976420085" duration="2000" />
       <workItem from="1721068272700" duration="6784000" />
-      <workItem from="1721089969876" duration="3348000" />
+      <workItem from="1721089969876" duration="6474000" />
     </task>
     <servers />
   </component>

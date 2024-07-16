@@ -2,7 +2,7 @@ package scaler;
 
 import engine.Value;
 
-public class Scaler implements IScaler {
+public class StandardScaler implements IScaler {
     private float singleMean;
     private float singleStd;
     private float[] mean;
