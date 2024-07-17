@@ -57,8 +57,8 @@ public class Demo {
         // Create model
         MLP model = new MLP();
         model.add(new Layer(5, 16)); // input layer
-        //model.add(new Layer(16, 8)); // hidden
-        model.add(new Layer(16, 1)); // output
+        model.add(new Layer(16, 8)); // hidden
+        model.add(new Layer(8, 1)); // output
 
         // Criterion and optimizer
         Optimizer optimizer = new SGD(model.parameters(), lr, momentum);
