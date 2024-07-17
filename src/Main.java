@@ -34,8 +34,9 @@ public class Main {
 
         // Now, create MLP with 2 layers
         MLP model = new MLP();
-        model.add(new Layer(nFeatures, 16)); // input layer
-        //model.add(new Layer(128, 64));
+        model.add(new Layer(nFeatures, 128)); // input layer
+        model.add(new Layer(128, 64));
+        model.add(new Layer(4, 16));
         model.add(new Layer(16, 1)); // output
 
         // Create loss
